@@ -26,13 +26,16 @@ app.listen(port, () => {
 gpio
   .setup(PIN_TRIGGER, gpio.DIR_OUT)
   .then(() => {
-    console.log(`PIN ${PIN_TRIGGER} IS SET`);
     gpio.write(PIN_TRIGGER, false).then(() => {
-      setTimeout(() => {
-        gpio.write(PIN_TRIGGER, true).then(() => {
-          gpio.write(PIN_TRIGGER, false);
-        }),2;
-      });
+      console.log(`PIN ${PIN_TRIGGER} SET false`);
+    });
+
+    gpio.write(PIN_TRIGGER, true).then(() => {
+      console.log(`PIN ${PIN_TRIGGER} SET TO true`);
+    });
+
+    gpio.write(PIN_TRIGGER, false).then(() => {
+      console.log(`PIN ${PIN_TRIGGER} SET TO false`);
     });
   })
   .catch((err) => {
