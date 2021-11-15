@@ -20,11 +20,16 @@ app.listen(port, () => {
 gpio
   .setup(PIN_TRIGGER, gpio.DIR_OUT)
   .then(() => {
-    console.log(PIN_ECHO);
+    setTimeout((PIN_TRIGGER) => {
+      gpio.write(PIN_TRIGGER, true);
+    }, 2000);
+
+    console.log(`PIN ${PIN_TRIGGER} IS SET`);
   })
   .catch((err) => {
     console.log(`ERROR: ${PIN_TRIGGER} ${err}`);
   });
+
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
 // Trig Connects to Pin 7 (GPIO 4)
