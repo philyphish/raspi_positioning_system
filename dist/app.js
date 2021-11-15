@@ -45,16 +45,19 @@ gpio
     .then(() => {
     console.log(`PIN ${PIN_ECHO} IS SET`);
     gpio.read(PIN_ECHO).then((res) => {
-        while (res === false) {
-            // start timer
-            timer.start();
-            console.log(`Timer started: ${timer.isStarted()}`);
-        }
-        while (res === true) {
-            // stop timer
-            timer.stop();
-            console.log(`Timer is stopped: ${timer.isStopped()} at ${timer.time()}`);
-        }
+        console.log(`response: ${res}`);
+        // while (res === false) {
+        //   // start timer
+        //   timer.start();
+        //   console.log(`Timer started: ${timer.isStarted()}`);
+        // }
+        // while (res === true) {
+        //   // stop timer
+        //   timer.stop();
+        //   console.log(
+        //     `Timer is stopped: ${timer.isStopped()} at ${timer.time()}`
+        //   );
+        // }
     });
 })
     .catch((err) => {
