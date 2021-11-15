@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const rpi_gpio_1 = __importDefault(require("rpi-gpio"));
+const timer_node_1 = require("timer-node");
 const app = (0, express_1.default)();
 const port = 4200;
 const publicPath = express_1.default.static(path_1.default.join(__dirname, "../client/build"), {
@@ -14,24 +15,49 @@ const publicPath = express_1.default.static(path_1.default.join(__dirname, "../c
 const gpio = rpi_gpio_1.default.promise;
 const PIN_TRIGGER = 7;
 const PIN_ECHO = 11;
+const timer = new timer_node_1.Timer({ label: 'echo-timer' });
 app.use(publicPath);
 app.listen(port, () => {
     console.log(`Server Listening on port ${port}`);
 });
-const setTrigger = gpio
+// The code below will be moved into
+// it's own file in the route dir
+// set PIN_ECHO
+gpio
+    .setup(PIN_ECHO, gpio.DIR_IN)
+    .then(() => {
+    gpio.read(PIN_ECHO);
+    console.log(`PIN ${PIN_ECHO} IS SET`);
+})
+    .catch((err) => {
+    console.log(`ERROR: ${PIN_ECHO} ${err}`);
+});
+// set PIN_TRIGGER
+gpio
     .setup(PIN_TRIGGER, gpio.DIR_OUT)
     .then(() => {
-    setTimeout((PIN_TRIGGER) => {
-        gpio.write(PIN_TRIGGER, true);
-    }, 2000);
     console.log(`PIN ${PIN_TRIGGER} IS SET`);
 })
     .catch((err) => {
     console.log(`ERROR: ${PIN_TRIGGER} ${err}`);
 });
+gpio.write(PIN_TRIGGER, true).then(() => {
+    gpio.write(PIN_TRIGGER, false);
+});
+gpio.read(PIN_ECHO).then((res) => {
+    if (res === false) {
+        // start timer
+        timer.start;
+        console.log(`Timer started: ${timer.isStarted}`);
+    }
+    else {
+        // stop timer
+        timer.stop();
+        console.log(`Timer is stopped: ${timer.isStopped} at ${timer.time}`);
+    }
+});
 app.get(`/set`, (req, res) => {
     console.log(`GET SET`);
-    setTrigger;
 });
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)

@@ -16,7 +16,8 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "rpi-gpio": "^2.1.7",
-    "socket.io": "^4.3.2"
+    "socket.io": "^4.3.2",
+    "timer-node": "^5.0.5"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
