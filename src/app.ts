@@ -17,18 +17,34 @@ app.listen(port, () => {
   console.log(`Server Listening on port ${port}`);
 });
 
+// The code below will be moved into
+// it's own file in the route dir
+
+// set PIN_ECHO
+gpio
+  .setup(PIN_ECHO, gpio.DIR_IN)
+  .then(() => {
+    gpio.read(PIN_TRIGGER);
+    console.log(`PIN ${PIN_ECHO} IS SET`);
+  })
+  .catch((err) => {
+    console.log(`ERROR: ${PIN_ECHO} ${err}`);
+  });
+
+// set PIN_TRIGGER
 gpio
   .setup(PIN_TRIGGER, gpio.DIR_OUT)
   .then(() => {
-    setTimeout((PIN_TRIGGER) => {
-      gpio.write(PIN_TRIGGER, true);
-    }, 2000);
-
+    gpio.write(PIN_TRIGGER, true);
     console.log(`PIN ${PIN_TRIGGER} IS SET`);
   })
   .catch((err) => {
     console.log(`ERROR: ${PIN_TRIGGER} ${err}`);
   });
+
+app.get(`/set`, (req, res) => {
+  console.log(`GET SET`);
+});
 
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
