@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import GPIO from "rpi-gpio";
-import { Timer, Time, TimerOptions } from 'timer-node';
+import { Timer, Time, TimerOptions } from "timer-node";
 
 const app = express();
 const port = 4200;
@@ -11,7 +11,7 @@ const publicPath = express.static(path.join(__dirname, "../client/build"), {
 const gpio = GPIO.promise;
 const PIN_TRIGGER = 7;
 const PIN_ECHO = 11;
-const timer = new Timer({ label: 'echo-timer' });
+const timer = new Timer({ label: "echo-timer" });
 
 app.use(publicPath);
 
@@ -22,42 +22,39 @@ app.listen(port, () => {
 // The code below will be moved into
 // it's own file in the route dir
 
-// set PIN_ECHO
-gpio
-  .setup(PIN_ECHO, gpio.DIR_IN)
-  .then(() => {
-    gpio.read(PIN_ECHO);
-    console.log(`PIN ${PIN_ECHO} IS SET`);
-  })
-  .catch((err) => {
-    console.log(`ERROR: ${PIN_ECHO} ${err}`);
-  });
-
 // set PIN_TRIGGER
 gpio
   .setup(PIN_TRIGGER, gpio.DIR_OUT)
   .then(() => {
     console.log(`PIN ${PIN_TRIGGER} IS SET`);
+    gpio.write(PIN_TRIGGER, true).then(() => {
+      gpio.write(PIN_TRIGGER, false);
+    });
   })
   .catch((err) => {
     console.log(`ERROR: ${PIN_TRIGGER} ${err}`);
   });
 
-gpio.write(PIN_TRIGGER, true).then(() => {
-  gpio.write(PIN_TRIGGER, false);
-});
-
-gpio.read(PIN_ECHO).then((res) => {
-  if (res === false) {
-    // start timer
-    timer.start;
-    console.log(`Timer started: ${timer.isStarted}`);
-  } else {
-    // stop timer
-    timer.stop();
-    console.log(`Timer is stopped: ${timer.isStopped} at ${timer.time}`);
-  }
-});
+// set PIN_ECHO
+gpio
+  .setup(PIN_ECHO, gpio.DIR_IN)
+  .then(() => {
+    console.log(`PIN ${PIN_ECHO} IS SET`);
+    gpio.read(PIN_ECHO).then((res) => {
+      if (res === false) {
+        // start timer
+        timer.start;
+        console.log(`Timer started: ${timer.isStarted}`);
+      } else {
+        // stop timer
+        timer.stop();
+        console.log(`Timer is stopped: ${timer.isStopped} at ${timer.time}`);
+      }
+    });
+  })
+  .catch((err) => {
+    console.log(`ERROR: ${PIN_ECHO} ${err}`);
+  });
 
 app.get(`/set`, (req, res) => {
   console.log(`GET SET`);
