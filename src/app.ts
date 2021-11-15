@@ -27,8 +27,12 @@ gpio
   .setup(PIN_TRIGGER, gpio.DIR_OUT)
   .then(() => {
     console.log(`PIN ${PIN_TRIGGER} IS SET`);
-    gpio.write(PIN_TRIGGER, true).then(() => {
-      gpio.write(PIN_TRIGGER, false);
+    gpio.write(PIN_TRIGGER, false).then(() => {
+      setTimeout(() => {
+        gpio.write(PIN_TRIGGER, true).then(() => {
+          gpio.write(PIN_TRIGGER, false);
+        }),2;
+      });
     });
   })
   .catch((err) => {
@@ -48,8 +52,10 @@ gpio
       }
       while (res === true) {
         // stop timer
-      timer.stop();
-      console.log(`Timer is stopped: ${timer.isStopped()} at ${timer.time()}`);
+        timer.stop();
+        console.log(
+          `Timer is stopped: ${timer.isStopped()} at ${timer.time()}`
+        );
       }
     });
   })
