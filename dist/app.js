@@ -40,15 +40,15 @@ gpio
     .then(() => {
     console.log(`PIN ${PIN_ECHO} IS SET`);
     gpio.read(PIN_ECHO).then((res) => {
-        if (res === false) {
+        while (res === false) {
             // start timer
-            timer.start;
-            console.log(`Timer started: ${timer.isStarted}`);
+            timer.start();
+            console.log(`Timer started: ${timer.isStarted()}`);
         }
-        else {
+        while (res === true) {
             // stop timer
             timer.stop();
-            console.log(`Timer is stopped: ${timer.isStopped} at ${timer.time}`);
+            console.log(`Timer is stopped: ${timer.isStopped()} at ${timer.time()}`);
         }
     });
 })
