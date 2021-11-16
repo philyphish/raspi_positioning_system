@@ -23,6 +23,7 @@ app.listen(port, () => {
 app.get(`/set`, (req, res) => {
     console.log(`GET SET`);
     setTriggerPin;
+    readEcho;
 });
 // set PINs
 const setTriggerPin = gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
@@ -41,7 +42,7 @@ const setTriggerPin = gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
     .catch(err => {
     console.error(`ERROR: ${err}`);
 });
-gpio.setup(PIN_ECHO, gpio.DIR_IN)
+const readEcho = gpio.setup(PIN_ECHO, gpio.DIR_IN)
     .then(() => {
     const echo = gpio.read(PIN_ECHO);
     do {
