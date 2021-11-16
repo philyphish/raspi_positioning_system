@@ -37,30 +37,32 @@ gpio
     gpio.write(PIN_TRIGGER, false).then(() => {
       console.log(`PIN ${PIN_TRIGGER} SET TO false`);
     });
+
+    setEcho;
   })
+  .then()
   .catch((err) => {
     console.log(`ERROR: ${PIN_TRIGGER} ${err}`);
   });
 
 // set PIN_ECHO
-gpio
+const setEcho = gpio
   .setup(PIN_ECHO, gpio.DIR_IN)
   .then(() => {
     console.log(`PIN ${PIN_ECHO} IS SET`);
     gpio.read(PIN_ECHO).then((res) => {
-      console.log(`response: ${res}`);
-      // while (res === false) {
-      //   // start timer
-      //   timer.start();
-      //   console.log(`Timer started: ${timer.isStarted()}`);
-      // }
-      // while (res === true) {
-      //   // stop timer
-      //   timer.stop();
-      //   console.log(
-      //     `Timer is stopped: ${timer.isStopped()} at ${timer.time()}`
-      //   );
-      // }
+      while (res === false) {
+        // start timer
+        timer.start();
+        console.log(`Timer started: ${timer.isStarted()}`);
+      }
+      while (res === true) {
+        // stop timer
+        timer.stop();
+        console.log(
+          `Timer is stopped: ${timer.isStopped()} at ${timer.time()}`
+        );
+      }
     });
   })
   .catch((err) => {
