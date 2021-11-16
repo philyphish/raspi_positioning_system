@@ -24,20 +24,24 @@ app.get(`/set`, (req, res) => {
     console.log(`GET SET`);
 });
 // set PINs
-gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
+const setTriggerPin = gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
     .then(() => {
+    console.info(`Trigger is set to false\n`);
     return gpio.write(PIN_TRIGGER, false);
 })
     .then(() => {
+    console.info(`Trigger is set to true\n`);
     return gpio.write(PIN_TRIGGER, true);
 })
     .then(() => {
+    console.info(`Trigger is set to false\n`);
     return gpio.write(PIN_TRIGGER, false);
 })
     .catch(err => {
     console.error(`ERROR: ${err}`);
 });
 gpio.setup(PIN_ECHO, gpio.DIR_IN);
+console.log('Trigger PIN Status: ', setTriggerPin);
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
 // Trig Connects to Pin 7 (GPIO 4)
