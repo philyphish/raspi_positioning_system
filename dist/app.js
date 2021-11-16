@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -43,15 +52,16 @@ const setTriggerPin = gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
     console.error(`ERROR: ${err}`);
 });
 const readEcho = gpio.setup(PIN_ECHO, gpio.DIR_IN)
-    .then(() => {
+    .then(() => __awaiter(void 0, void 0, void 0, function* () {
     const echo = gpio.read(PIN_ECHO);
     do {
         timer.start();
         console.log('Timer started\n', timer.isStarted());
+        readEcho;
     } while (echo);
     timer.stop();
     console.log('Timer is stopped\n', timer.isStopped());
-});
+}));
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
 // Trig Connects to Pin 7 (GPIO 4)

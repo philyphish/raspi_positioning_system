@@ -44,11 +44,12 @@ const setTriggerPin = gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
   });
 
 const readEcho = gpio.setup(PIN_ECHO, gpio.DIR_IN)
-  .then(() => {
+  .then(async () => {
     const echo = gpio.read(PIN_ECHO);
     do {
       timer.start();
       console.log('Timer started\n', timer.isStarted());
+      readEcho;
     } while(echo);
 
     timer.stop();
