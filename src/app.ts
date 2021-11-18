@@ -25,14 +25,18 @@ app.get(`/set`, (req, res) => {
 });
 
 // set PINs
-async function writePin() {gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
-  .then(()=> {
+gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
+  .then(async ()=> {
     console.log(`Set ${PIN_TRIGGER} to false`);
-    return gpio.write(PIN_TRIGGER, false);
+    await gpio.write(PIN_TRIGGER, false);
+  })
+  .then(async ()=> {
+    await setTimeout(()=> {
+      gpio.write(PIN_TRIGGER, true);
+      console.log(`Set ${PIN_TRIGGER} to true`);
+    },200);
   });
-};
 
-writePin();
 gpio.setup(PIN_ECHO, gpio.DIR_IN);
 
 
