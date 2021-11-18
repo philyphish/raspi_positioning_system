@@ -40,15 +40,16 @@ gpio
         });
       });
     }, 1000);
-  });
-
-gpio
-  .setup(PIN_ECHO, gpio.DIR_IN)
-  .then((result) => {
-    console.log(`ECHO IS SET TO ${result}`);
   })
-  .then((result) => {
-    console.log(`SECOND READING OF ECHO IS SET TO ${result}`);
+  .then(() => {
+    gpio
+      .setup(PIN_ECHO, gpio.DIR_IN)
+      .then((result) => {
+        console.log(`ECHO IS SET TO ${result}`);
+      })
+      .then((result) => {
+        console.log(`SECOND READING OF ECHO IS SET TO ${result}`);
+      });
   });
 
 ///////// GPIO PINS FOR HC-SR04 /////////////////
