@@ -31,37 +31,20 @@ app.listen(port, () => {
 });
 app.get(`/set`, (req, res) => {
     console.log(`GET SET`);
-    setTriggerPin;
-    readEcho;
 });
 // set PINs
-const setTriggerPin = gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
-    .then(() => {
-    console.info(`Trigger is set to false\n`);
-    gpio.write(PIN_TRIGGER, false);
-})
-    .then(() => {
-    console.info(`Trigger is set to true\n`);
-    return gpio.write(PIN_TRIGGER, true);
-})
-    .then(() => {
-    console.info(`Trigger is set to false\n`);
-    return gpio.write(PIN_TRIGGER, false);
-})
-    .catch(err => {
-    console.error(`ERROR: ${err}`);
-});
-const readEcho = gpio.setup(PIN_ECHO, gpio.DIR_IN)
-    .then(() => __awaiter(void 0, void 0, void 0, function* () {
-    const echo = gpio.read(PIN_ECHO);
-    do {
-        timer.start();
-        console.log('Timer started\n', timer.isStarted());
-        readEcho;
-    } while (echo);
-    timer.stop();
-    console.log('Timer is stopped\n', timer.isStopped());
-}));
+function writePin() {
+    return __awaiter(this, void 0, void 0, function* () {
+        gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
+            .then(() => {
+            console.log(`Set ${PIN_TRIGGER} to false`);
+            return gpio.write(PIN_TRIGGER, false);
+        });
+    });
+}
+;
+writePin();
+gpio.setup(PIN_ECHO, gpio.DIR_IN);
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
 // Trig Connects to Pin 7 (GPIO 4)
