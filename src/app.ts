@@ -34,27 +34,19 @@ gpio
   .then(() => {
     setTimeout(() => {
       console.log(`Set ${PIN_TRIGGER} to true`);
-      gpio
-        .write(PIN_TRIGGER, true)
-        .then(() => {
-          console.log(
-            "PIN ECO is: ",
-            ECHO.then(() => {
-              gpio.read(PIN_ECHO);
-            })
-          );
+      gpio.write(PIN_TRIGGER, true).then(() => {
+        console.log(`Set ${PIN_TRIGGER} to false`);
+        gpio.write(PIN_TRIGGER, false).then(() => {
+          ECHO.then(() => {
+            console.log(`FIRST READING ECHO PIN: `, gpio.read(PIN_ECHO));
+          });
         })
         .then(() => {
-          console.log(`Set ${PIN_TRIGGER} to false`);
-          gpio.write(PIN_TRIGGER, false).then(() => {
-            console.log(
-              "PIN ECO is: ",
-              ECHO.then(() => {
-                gpio.read(PIN_ECHO);
-              })
-            );
+          ECHO.then(() => {
+            console.log(`SECOND READING ECHO PIN: `, gpio.read(PIN_ECHO));
           });
         });
+      });
     }, 1000);
   });
 
