@@ -39,10 +39,14 @@ gpio
         gpio
           .write(PIN_TRIGGER, false)
           .then(() => {
-            console.log(`FIRST READING ECHO PIN: `, gpio.read(PIN_ECHO));
+            setTimeout(()=> {
+              console.log(`FIRST READING ECHO PIN: `, gpio.read(PIN_ECHO));
+            }, 100);
           })
           .then(() => {
-            console.log(`SECOND READING ECHO PIN: `, gpio.read(PIN_ECHO));
+            setTimeout(()=> {
+              console.log(`SECOND READING ECHO PIN: `, gpio.read(PIN_ECHO));
+            }, 100);
           });
       });
     }, 1000);
