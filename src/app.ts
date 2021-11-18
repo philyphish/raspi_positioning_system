@@ -25,7 +25,10 @@ app.get(`/set`, (req, res) => {
 });
 
 // set PINs
-gpio.setup(PIN_TRIGGER, gpio.DIR_OUT, writeToTrigger);
+while(true) {
+  gpio.setup(PIN_TRIGGER, gpio.DIR_OUT, writeToTrigger);
+}
+
 gpio.setup(PIN_ECHO, gpio.DIR_IN, gpio.EDGE_BOTH);
 
 function writeToTrigger(err: any) {
