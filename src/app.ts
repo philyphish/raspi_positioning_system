@@ -24,7 +24,7 @@ app.get(`/set`, (req, res) => {
 });
 
 // set PINs
-const ECHO = gpio.setup(PIN_ECHO, gpio.DIR_IN);
+gpio.setup(PIN_ECHO, gpio.DIR_IN);
 gpio
   .setup(PIN_TRIGGER, gpio.DIR_OUT)
   .then(() => {
@@ -36,16 +36,14 @@ gpio
       console.log(`Set ${PIN_TRIGGER} to true`);
       gpio.write(PIN_TRIGGER, true).then(() => {
         console.log(`Set ${PIN_TRIGGER} to false`);
-        gpio.write(PIN_TRIGGER, false).then(() => {
-          ECHO.then(() => {
+        gpio
+          .write(PIN_TRIGGER, false)
+          .then(() => {
             console.log(`FIRST READING ECHO PIN: `, gpio.read(PIN_ECHO));
-          });
-        })
-        .then(() => {
-          ECHO.then(() => {
+          })
+          .then(() => {
             console.log(`SECOND READING ECHO PIN: `, gpio.read(PIN_ECHO));
           });
-        });
       });
     }, 1000);
   });
