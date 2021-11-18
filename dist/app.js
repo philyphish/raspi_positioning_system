@@ -42,17 +42,23 @@ gpio
 }))
     .then(() => __awaiter(void 0, void 0, void 0, function* () {
     yield setTimeout(() => {
-        gpio.write(PIN_TRIGGER, true);
         console.log(`Set ${PIN_TRIGGER} to true`);
-        console.log("PIN ECO is: ", ECHO.then(() => {
-            gpio.read(PIN_ECHO);
-        }));
-        gpio.write(PIN_TRIGGER, false);
-        console.log(`Set ${PIN_TRIGGER} to false`);
-        console.log("PIN ECO is: ", ECHO.then(() => {
-            gpio.read(PIN_ECHO);
-        }));
-    }, 2000);
+        gpio
+            .write(PIN_TRIGGER, true)
+            .then(() => {
+            console.log("PIN ECO is: ", ECHO.then(() => {
+                gpio.read(PIN_ECHO);
+            }));
+        })
+            .then(() => {
+            console.log(`Set ${PIN_TRIGGER} to false`);
+            gpio.write(PIN_TRIGGER, false).then(() => {
+                console.log("PIN ECO is: ", ECHO.then(() => {
+                    gpio.read(PIN_ECHO);
+                }));
+            });
+        });
+    }, 1000);
 }));
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
