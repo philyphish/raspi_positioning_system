@@ -29,20 +29,20 @@ gpio.setup(PIN_TRIGGER, gpio.DIR_OUT, writeToTrigger);
 gpio.setup(PIN_ECHO, gpio.DIR_IN, gpio.EDGE_BOTH);
 
 function writeToTrigger(err: any) {
-  gpio.write(PIN_TRIGGER, false, (value) => {
+  gpio.write(PIN_TRIGGER, false, () => {
     if (err) throw err;
-    console.log(`Trigger is set to ${value}`);
+    console.log(`Trigger is set to false`);
   });
   setTimeout(() => {
-    gpio.write(PIN_TRIGGER, true, (value) => {
+    gpio.write(PIN_TRIGGER, true, () => {
       if (err) throw err;
-      console.log(`Trigger is set to ${value}`);
+      console.log(`Trigger is set to true`);
     });
 
     setTimeout(() => {
-      gpio.write(PIN_TRIGGER, false, (value) => {
+      gpio.write(PIN_TRIGGER, false, () => {
         if (err) throw err;
-        console.log(`Trigger is set to ${value}`);
+        console.log(`Trigger is set to false`);
       });
     }, 1);
   }, 2000);
@@ -50,6 +50,18 @@ function writeToTrigger(err: any) {
 
 gpio.on("change", (PIN_ECHO, value) => {
   console.log(`Echo is set to ${value}`);
+  let startTime;
+  do {
+    startTime = timer.start();
+  } while(!value);
+
+  do {
+    timer.stop();
+    startTime = timer.ms();
+    console.log(`timer stopped: ${startTime}`);
+    
+    return startTime;
+  } while(value);
 });
 
 ///////// GPIO PINS FOR HC-SR04 /////////////////
