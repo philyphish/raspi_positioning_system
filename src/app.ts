@@ -27,12 +27,12 @@ app.get(`/set`, (req, res) => {
 const ECHO = gpio.setup(PIN_ECHO, gpio.DIR_IN);
 gpio
   .setup(PIN_TRIGGER, gpio.DIR_OUT)
-  .then(async () => {
+  .then(() => {
     console.log(`Set ${PIN_TRIGGER} to false`);
-    await gpio.write(PIN_TRIGGER, false);
+    gpio.write(PIN_TRIGGER, false);
   })
-  .then(async () => {
-    await setTimeout(() => {
+  .then(() => {
+    setTimeout(() => {
       console.log(`Set ${PIN_TRIGGER} to true`);
       gpio
         .write(PIN_TRIGGER, true)
