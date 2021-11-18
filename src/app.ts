@@ -24,7 +24,6 @@ app.get(`/set`, (req, res) => {
 });
 
 // set PINs
-gpio.setup(PIN_ECHO, gpio.DIR_IN);
 gpio
   .setup(PIN_TRIGGER, gpio.DIR_OUT)
   .then(() => {
@@ -36,24 +35,20 @@ gpio
       console.log(`Set ${PIN_TRIGGER} to true`);
       gpio.write(PIN_TRIGGER, true).then(() => {
         console.log(`Set ${PIN_TRIGGER} to false`);
-        gpio
-          .write(PIN_TRIGGER, false)
-          .then(() => {
-            setTimeout(() => {
-              gpio.read(PIN_ECHO).then((result)=> {
-                console.log('FIRST ECHO RESULT: ', result);
-              });
-            }, 100);
-          })
-          .then(() => {
-            setTimeout(() => {
-              gpio.read(PIN_ECHO).then((result)=> {
-                console.log('SECOND ECHO RESULT: ', result);
-              });
-            }, 100);
-          });
+        gpio.write(PIN_TRIGGER, false).then((result) => {
+          console.log(`TRIGGER IS SET TO ${result}`);
+        });
       });
     }, 1000);
+  });
+
+gpio
+  .setup(PIN_ECHO, gpio.DIR_IN)
+  .then((result) => {
+    console.log(`ECHO IS SET TO ${result}`);
+  })
+  .then((result) => {
+    console.log(`SECOND READING OF ECHO IS SET TO ${result}`);
   });
 
 ///////// GPIO PINS FOR HC-SR04 /////////////////
