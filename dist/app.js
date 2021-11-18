@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -36,30 +27,28 @@ app.get(`/set`, (req, res) => {
 const ECHO = gpio.setup(PIN_ECHO, gpio.DIR_IN);
 gpio
     .setup(PIN_TRIGGER, gpio.DIR_OUT)
-    .then(() => __awaiter(void 0, void 0, void 0, function* () {
+    .then(() => {
     console.log(`Set ${PIN_TRIGGER} to false`);
-    yield gpio.write(PIN_TRIGGER, false);
-}))
-    .then(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield setTimeout(() => {
+    gpio.write(PIN_TRIGGER, false);
+})
+    .then(() => {
+    setTimeout(() => {
         console.log(`Set ${PIN_TRIGGER} to true`);
-        gpio
-            .write(PIN_TRIGGER, true)
-            .then(() => {
-            console.log("PIN ECO is: ", ECHO.then(() => {
-                gpio.read(PIN_ECHO);
-            }));
-        })
-            .then(() => {
+        gpio.write(PIN_TRIGGER, true).then(() => {
             console.log(`Set ${PIN_TRIGGER} to false`);
             gpio.write(PIN_TRIGGER, false).then(() => {
-                console.log("PIN ECO is: ", ECHO.then(() => {
-                    gpio.read(PIN_ECHO);
-                }));
+                ECHO.then(() => {
+                    console.log(`FIRST READING ECHO PIN: `, gpio.read(PIN_ECHO));
+                });
+            })
+                .then(() => {
+                ECHO.then(() => {
+                    console.log(`SECOND READING ECHO PIN: `, gpio.read(PIN_ECHO));
+                });
             });
         });
     }, 1000);
-}));
+});
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
 // Trig Connects to Pin 7 (GPIO 4)
