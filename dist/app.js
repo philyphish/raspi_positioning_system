@@ -33,7 +33,9 @@ app.get(`/set`, (req, res) => {
     console.log(`GET SET`);
 });
 // set PINs
-gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
+const ECHO = gpio.setup(PIN_ECHO, gpio.DIR_IN);
+gpio
+    .setup(PIN_TRIGGER, gpio.DIR_OUT)
     .then(() => __awaiter(void 0, void 0, void 0, function* () {
     console.log(`Set ${PIN_TRIGGER} to false`);
     yield gpio.write(PIN_TRIGGER, false);
@@ -42,14 +44,26 @@ gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
     yield setTimeout(() => {
         gpio.write(PIN_TRIGGER, true);
         console.log(`Set ${PIN_TRIGGER} to true`);
-    }, 200);
-}));
-gpio.setup(PIN_ECHO, gpio.DIR_IN);
+        gpio.write(PIN_TRIGGER, false);
+        console.log(`Set ${PIN_TRIGGER} to false`);
+    }, 2000);
+}))
+    .then(() => {
+    ECHO.then(() => {
+        if (gpio.read(PIN_ECHO)) {
+            console.log(`Echo is true`);
+        }
+        else {
+            console.log(`Echo is false`);
+        }
+        ;
+    });
+});
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
 // Trig Connects to Pin 7 (GPIO 4)
 // Echo Connects to R1 (1k Ω)
-// R2 (2k Ω) Connects from R1 to Ground
+// R2 (1k Ω) Connects from R1 to Ground
 // Wire from R1 and R2 connects to Pin 11
 // GND connects to Pin 6 (Ground)
 //# sourceMappingURL=app.js.map

@@ -1,5 +1,4 @@
 import express from "express";
-import { write } from "fs";
 import path from "path";
 import GPIO from "rpi-gpio";
 import { Timer, Time, TimerOptions } from "timer-node";
@@ -25,26 +24,36 @@ app.get(`/set`, (req, res) => {
 });
 
 // set PINs
-gpio.setup(PIN_TRIGGER, gpio.DIR_OUT)
-  .then(async ()=> {
+const ECHO = gpio.setup(PIN_ECHO, gpio.DIR_IN);
+gpio
+  .setup(PIN_TRIGGER, gpio.DIR_OUT)
+  .then(async () => {
     console.log(`Set ${PIN_TRIGGER} to false`);
     await gpio.write(PIN_TRIGGER, false);
   })
-  .then(async ()=> {
-    await setTimeout(()=> {
+  .then(async () => {
+    await setTimeout(() => {
       gpio.write(PIN_TRIGGER, true);
       console.log(`Set ${PIN_TRIGGER} to true`);
-    },200);
+      gpio.write(PIN_TRIGGER, false);
+      console.log(`Set ${PIN_TRIGGER} to false`);
+    }, 2000);
+  })
+  .then(()=>{
+    ECHO.then(()=>{
+      if(gpio.read(PIN_ECHO)) {
+        console.log(`Echo is true`);
+      } else {
+        console.log(`Echo is false`);
+      };
+    })
   });
-
-gpio.setup(PIN_ECHO, gpio.DIR_IN);
-
 
 
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
 // Trig Connects to Pin 7 (GPIO 4)
 // Echo Connects to R1 (1k Ω)
-// R2 (2k Ω) Connects from R1 to Ground
+// R2 (1k Ω) Connects from R1 to Ground
 // Wire from R1 and R2 connects to Pin 11
 // GND connects to Pin 6 (Ground)
