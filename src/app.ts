@@ -1,4 +1,5 @@
 import express from "express";
+import { stat } from "fs";
 import path from "path";
 import GPIO from "rpi-gpio";
 import { Timer, Time, TimerOptions } from "timer-node";
@@ -8,7 +9,7 @@ const port = 4200;
 const publicPath = express.static(path.join(__dirname, "../client/build"), {
   redirect: false,
 });
-const gpio = GPIO.promise;
+const gpio = GPIO;
 const PIN_TRIGGER = 7;
 const PIN_ECHO = 11;
 const timer = new Timer({ label: "echo-timer" });
@@ -24,33 +25,31 @@ app.get(`/set`, (req, res) => {
 });
 
 // set PINs
-gpio
-  .setup(PIN_TRIGGER, gpio.DIR_OUT)
-  .then(() => {
-    console.log(`Set ${PIN_TRIGGER} to false`);
-    gpio.write(PIN_TRIGGER, false);
-  })
-  .then(() => {
-    setTimeout(() => {
-      console.log(`Set ${PIN_TRIGGER} to true`);
-      gpio.write(PIN_TRIGGER, true).then(() => {
-        console.log(`Set ${PIN_TRIGGER} to false`);
-        gpio.write(PIN_TRIGGER, false).then((result) => {
-          console.log(`TRIGGER IS SET TO ${result}`);
-        });
-      });
-    }, 1000);
-  })
-  .then(() => {
-    gpio
-      .setup(PIN_ECHO, gpio.DIR_IN)
-      .then((result) => {
-        console.log(`ECHO IS SET TO ${result}`);
-      })
-      .then((result) => {
-        console.log(`SECOND READING OF ECHO IS SET TO ${result}`);
-      });
+gpio.setup(PIN_TRIGGER, gpio.DIR_OUT);
+gpio.setup(PIN_ECHO, gpio.DIR_IN, gpio.EDGE_BOTH);
+writeToTrigger(false);
+
+setTimeout(() => {
+  writeToTrigger(true);
+  setTimeout(()=> {
+    writeToTrigger(false);
+  }, 1);
+}, 2000); // 2 seconds to allow PIN to settle
+
+listenToEcho();
+
+function writeToTrigger(status: boolean) {
+  gpio.write(PIN_TRIGGER, status, (err: any) => {
+    if (err) throw err;
+    console.log(`Trigger is set to ${status}`);
   });
+}
+
+function listenToEcho() {
+  gpio.on("change", (PIN_ECHO, value) => {
+    console.log(`Echo is set to ${value}`);
+  });
+}
 
 ///////// GPIO PINS FOR HC-SR04 /////////////////
 // VCC Connects to Pin 2 (5v)
