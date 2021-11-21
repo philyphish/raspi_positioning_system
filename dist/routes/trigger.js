@@ -39,20 +39,29 @@ router.get("/", () => {
     gpio
         .setup(ECHO, gpio.DIR_IN)
         .then(() => {
-        while (gpio.read(ECHO)) {
+        gpio.read(ECHO)
+            .then(() => {
+            console.log(`Timer is started`);
             startTime = timer.start();
-        }
-    })
-        .then(() => {
-        while (gpio.read(ECHO)) {
+        })
+            .then(() => {
+            console.log(`Timer stopped`);
             stopTime = timer.stop();
-        }
+        });
     })
         .finally(() => {
         console.log(`Start Time: ${startTime}`);
         console.log(`Stop Time: ${stopTime}`);
         console.log(`Elapsed Time: ${timer.ms()}`);
-    });
+    })
+        .catch(err => console.log(err));
 });
+///////// GPIO PINS FOR HC-SR04 /////////////////
+// VCC Connects to Pin 2 (5v)
+// Trig Connects to Pin 7 (GPIO 4)
+// Echo Connects to R1 (1k Ω)
+// R2 (1k Ω) Connects from R1 to Ground
+// Wire from R1 and R2 connects to Pin 11
+// GND connects to Pin 6 (Ground)
 module.exports = router;
 //# sourceMappingURL=trigger.js.map
