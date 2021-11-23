@@ -5,56 +5,39 @@ import { Router } from "express";
 
 const app = express();
 const router = Router();
-
-const gpio = GPIO.promise;
-const TRIGGER = 7;
-const ECHO = 11;
-const timer = new Timer({ label: "echo-timer" });
-
-let startTime: Timer;
-let stopTime: Timer;
+const Gpio = require("pigpio").Gpio;
 
 router.get("/", () => {
-  console.log(`GET WORKS!`);
-  gpio
-    .setup(TRIGGER, gpio.DIR_OUT)
-    .then(() => {
-      gpio.write(TRIGGER, false);
-      console.log(`pin ${TRIGGER} is set to false`);
-    })
-    .then(() => {
-      setTimeout(() => {
-        gpio.write(TRIGGER, true);
-        console.log(`pin ${TRIGGER} is set to true`);
-      }, 1000);
-    })
-    .then(() => {
-      setTimeout(() => {
-        gpio.write(TRIGGER, false);
-        console.log(`pin ${TRIGGER} is set to false`);
-      }, 1);
-    })
-    .catch((err) => console.error(err));
+  
 
-  gpio
-    .setup(ECHO, gpio.DIR_IN)
-    .then(()=> {
-      gpio.read(ECHO)
-        .then(()=> {
-          console.log(`Timer is started`);
-          startTime = timer.start();
-        })
-        .then(()=>{
-          console.log(`Timer stopped`);
-          stopTime = timer.stop();
-        });
-    })
-    .finally(() => {
-      console.log(`Start Time: ${startTime}`);
-      console.log(`Stop Time: ${stopTime}`);
-      console.log(`Elapsed Time: ${timer.ms()}`);
-    })
-    .catch(err => console.log(err));
+  // The number of microseconds it takes sound to travel 1cm at 20 degrees celcius
+  const MICROSECDONDS_PER_CM = 1e6 / 34321;
+
+  const trigger = new Gpio(23, { mode: Gpio.OUTPUT });
+  const echo = new Gpio(24, { mode: Gpio.INPUT, alert: true });
+
+  trigger.digitalWrite(0); // Make sure trigger is low
+
+  const watchHCSR04 = () => {
+    let startTick: any;
+
+    echo.on("alert", (level:any, tick:any) => {
+      if (level == 1) {
+        startTick = tick;
+      } else {
+        const endTick = tick;
+        const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
+        console.log(diff / 2 / MICROSECDONDS_PER_CM);
+      }
+    });
+  };
+
+  watchHCSR04();
+
+  // Trigger a distance measurement once per second
+  setInterval(() => {
+    trigger.trigger(10, 1); // Set trigger high for 10 microseconds
+  }, 1000);
 });
 
 ///////// GPIO PINS FOR HC-SR04 /////////////////
