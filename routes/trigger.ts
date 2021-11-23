@@ -1,6 +1,4 @@
 import express from "express";
-import GPIO from "rpi-gpio";
-import { Timer, Time, TimerOptions } from "timer-node";
 import { Router } from "express";
 
 const app = express();
@@ -8,20 +6,18 @@ const router = Router();
 const Gpio = require("pigpio").Gpio;
 
 router.get("/", () => {
-  
-
   // The number of microseconds it takes sound to travel 1cm at 20 degrees celcius
   const MICROSECDONDS_PER_CM = 1e6 / 34321;
 
-  const trigger = new Gpio(23, { mode: Gpio.OUTPUT });
-  const echo = new Gpio(24, { mode: Gpio.INPUT, alert: true });
+  const trigger = new Gpio(7, { mode: Gpio.OUTPUT });
+  const echo = new Gpio(11, { mode: Gpio.INPUT, alert: true });
 
   trigger.digitalWrite(0); // Make sure trigger is low
 
   const watchHCSR04 = () => {
     let startTick: any;
 
-    echo.on("alert", (level:any, tick:any) => {
+    echo.on("alert", (level: any, tick: any) => {
       if (level == 1) {
         startTick = tick;
       } else {
