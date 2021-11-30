@@ -25,6 +25,7 @@ router.get("/", () => {
       } else {
         const endTick = tick;
         const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
+        console.log(`tick is type of: ${typeof tick}`);
         console.log(diff / 2 / MICROSECDONDS_PER_CM);
       }
     });
