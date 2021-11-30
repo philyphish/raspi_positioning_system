@@ -11,7 +11,7 @@ const publicPath = express_1.default.static(path_1.default.join(__dirname, "../c
     redirect: false,
 });
 const Gpio = require("pigpio").Gpio;
-const triggersRoute = require("./routes/trigger");
+//const triggersRoute = require("./routes/trigger");
 app.get("/test", (req, res) => {
     res.send("this is the root");
     // The number of microseconds it takes sound to travel 1cm at 20 degrees celcius
@@ -21,6 +21,9 @@ app.get("/test", (req, res) => {
     trigger.digitalWrite(0); // Make sure trigger is low
     const watchHCSR04 = () => {
         let startTick;
+        echo.on("alert", (level, tick) => {
+            console.log(`echo on alert ${level} and ${tick}`);
+        });
         echo.on("alert", (level, tick) => {
             if (level == 1) {
                 startTick = tick;
