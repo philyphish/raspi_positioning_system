@@ -15,7 +15,7 @@ app.listen(port, () => {
   console.log(`Server Listening on port ${port}`);
 });
 
-app.get(`/set`, (req, res) => {
-  console.log(`GET SET`);
-});
+// app.get(`/set`, (req, res) => {
+//   console.log(`GET SET`);
+// });
 app.use('/triggers', triggersRoute);

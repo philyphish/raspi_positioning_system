@@ -5,24 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
-const rpi_gpio_1 = __importDefault(require("rpi-gpio"));
-const timer_node_1 = require("timer-node");
 const app = (0, express_1.default)();
 const port = 4200;
 const publicPath = express_1.default.static(path_1.default.join(__dirname, "../client/build"), {
     redirect: false,
 });
-const gpio = rpi_gpio_1.default;
-const PIN_TRIGGER = 7;
-const PIN_ECHO = 11;
-const timer = new timer_node_1.Timer({ label: "echo-timer" });
 const triggersRoute = require('./routes/trigger');
 app.use(publicPath);
 app.listen(port, () => {
     console.log(`Server Listening on port ${port}`);
 });
-app.get(`/set`, (req, res) => {
-    console.log(`GET SET`);
-});
+// app.get(`/set`, (req, res) => {
+//   console.log(`GET SET`);
+// });
 app.use('/triggers', triggersRoute);
 //# sourceMappingURL=app.js.map

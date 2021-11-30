@@ -9,10 +9,11 @@ const app = (0, express_1.default)();
 const router = (0, express_2.Router)();
 const Gpio = require("pigpio").Gpio;
 router.get("/", () => {
+    console.log('triggers.route');
     // The number of microseconds it takes sound to travel 1cm at 20 degrees celcius
     const MICROSECDONDS_PER_CM = 1e6 / 34321;
-    const trigger = new Gpio(23, { mode: Gpio.OUTPUT });
-    const echo = new Gpio(24, { mode: Gpio.INPUT, alert: true });
+    const trigger = new Gpio(7, { mode: Gpio.OUTPUT });
+    const echo = new Gpio(11, { mode: Gpio.INPUT, alert: true });
     trigger.digitalWrite(0); // Make sure trigger is low
     const watchHCSR04 = () => {
         let startTick;
@@ -23,6 +24,7 @@ router.get("/", () => {
             else {
                 const endTick = tick;
                 const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
+                console.log(`tick is type of: ${typeof tick}`);
                 console.log(diff / 2 / MICROSECDONDS_PER_CM);
             }
         });
