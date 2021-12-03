@@ -1,12 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const express_2 = require("express");
-const app = (0, express_1.default)();
-const router = (0, express_2.Router)();
+const webSocketModule = require('./socket');
 const Gpio = require("pigpio").Gpio;
 module.exports = {
     startHcsr0: () => {
@@ -25,6 +19,7 @@ module.exports = {
                     const endTick = tick;
                     const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
                     console.log(diff / 2 / MICROSECDONDS_PER_CM);
+                    webSocketModule.startWebSocketServer(diff / 2 / MICROSECDONDS_PER_CM);
                 }
             });
         };

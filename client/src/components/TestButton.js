@@ -1,13 +1,17 @@
 import React from "react";
 
 function deleteHandler() {
-  alert("Hello!");
+  fetch("/test");
 }
 
 class TestButton extends React.Component {
   render() {
     const { name } = this.props;
-    return <button onClick={deleteHandler}>{this.props.name}</button>;
+    return (
+      <div>
+        <button onClick={deleteHandler}>{this.props.name}</button>
+      </div>
+    );
   }
 }
 
