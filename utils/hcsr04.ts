@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 
-const WSClient = new WebSocket('ws://localhost:3300');
+const WSClient = new WebSocket('ws://192.168.0.25:3300');
 const Gpio = require("pigpio").Gpio;
 
 module.exports = {
