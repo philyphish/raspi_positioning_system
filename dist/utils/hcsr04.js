@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ws_1 = __importDefault(require("ws"));
-const webSocketModule = require('./socket');
+const webSocketModule = require("./socket");
 const Gpio = require("pigpio").Gpio;
-const WSClient = new ws_1.default('ws://localhost:3300');
+const WSClient = new ws_1.default("ws://localhost:3300");
 // start webserver here
 module.exports = {
     startHcsr0: () => {
@@ -25,16 +25,16 @@ module.exports = {
                     const endTick = tick;
                     const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
                     console.log(diff / 2 / MICROSECDONDS_PER_CM);
-                    webSocketModule.startWebSocketServer(diff / 2 / MICROSECDONDS_PER_CM); //send message here
+                    WSClient.onopen = () => {
+                        WSClient.send(diff / 2 / MICROSECDONDS_PER_CM);
+                    };
                 }
             });
         };
         watchHCSR04();
         // Trigger a distance measurement once per second
         setInterval(() => {
-            WSClient.onopen = () => {
-                WSClient.send(trigger.trigger(10, 1)); // Set trigger high for 10 microseconds
-            };
+            trigger.trigger(10, 1); // Set trigger high for 10 microseconds
         }, 1000);
     },
 };
