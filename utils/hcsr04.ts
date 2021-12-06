@@ -3,7 +3,8 @@ import { Router } from "express";
 
 const webSocketModule = require('./socket');
 const Gpio = require("pigpio").Gpio;
-
+const WSClient = new WebSocket('ws://localhost:3300');
+// start webserver here
 module.exports = {
   startHcsr0: () => {
     // The number of microseconds it takes sound to travel 1cm at 20 degrees celcius
@@ -24,16 +25,18 @@ module.exports = {
           const endTick = tick;
           const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
           console.log(diff / 2 / MICROSECDONDS_PER_CM);
-          webSocketModule.startWebSocketServer(diff / 2 / MICROSECDONDS_PER_CM);
+          webSocketModule.startWebSocketServer(diff / 2 / MICROSECDONDS_PER_CM);  //send message here
         }
       });
     };
 
     watchHCSR04();
-
+    
     // Trigger a distance measurement once per second
     setInterval(() => {
-      trigger.trigger(10, 1); // Set trigger high for 10 microseconds
+      WSClient.onopen = () => {
+        WSClient.send(trigger.trigger(10, 1)); // Set trigger high for 10 microseconds
+      }
     }, 1000);
   },
 };

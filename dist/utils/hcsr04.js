@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const webSocketModule = require('./socket');
 const Gpio = require("pigpio").Gpio;
+// start webserver here
 module.exports = {
     startHcsr0: () => {
         // The number of microseconds it takes sound to travel 1cm at 20 degrees celcius
@@ -19,7 +20,7 @@ module.exports = {
                     const endTick = tick;
                     const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
                     console.log(diff / 2 / MICROSECDONDS_PER_CM);
-                    webSocketModule.startWebSocketServer(diff / 2 / MICROSECDONDS_PER_CM);
+                    webSocketModule.startWebSocketServer(diff / 2 / MICROSECDONDS_PER_CM); //send message here
                 }
             });
         };
