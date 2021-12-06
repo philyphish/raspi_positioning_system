@@ -7,7 +7,6 @@ const ws_1 = __importDefault(require("ws"));
 const webSocketModule = require("./socket");
 const Gpio = require("pigpio").Gpio;
 const WSClient = new ws_1.default("ws://localhost:3300");
-// start webserver here
 module.exports = {
     startHcsr0: () => {
         // The number of microseconds it takes sound to travel 1cm at 20 degrees celcius
@@ -24,7 +23,7 @@ module.exports = {
                 else {
                     const endTick = tick;
                     const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
-                    console.log(diff / 2 / MICROSECDONDS_PER_CM);
+                    console.log(`Messurment: ${diff / 2 / MICROSECDONDS_PER_CM}`);
                     WSClient.onopen = () => {
                         WSClient.send(diff / 2 / MICROSECDONDS_PER_CM);
                     };
