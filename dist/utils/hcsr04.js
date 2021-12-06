@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const webSocketModule = require('./socket');
 const Gpio = require("pigpio").Gpio;
+const WSClient = new WebSocket('ws://localhost:3300');
 // start webserver here
 module.exports = {
     startHcsr0: () => {
@@ -27,7 +28,9 @@ module.exports = {
         watchHCSR04();
         // Trigger a distance measurement once per second
         setInterval(() => {
-            trigger.trigger(10, 1); // Set trigger high for 10 microseconds
+            WSClient.onopen = () => {
+                WSClient.send(trigger.trigger(10, 1)); // Set trigger high for 10 microseconds
+            };
         }, 1000);
     },
 };
