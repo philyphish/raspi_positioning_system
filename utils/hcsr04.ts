@@ -1,5 +1,6 @@
 import express from "express";
 import { Router } from "express";
+import WebSocket from "ws";
 
 const webSocketModule = require('./socket');
 const Gpio = require("pigpio").Gpio;
@@ -31,7 +32,7 @@ module.exports = {
     };
 
     watchHCSR04();
-    
+
     // Trigger a distance measurement once per second
     setInterval(() => {
       WSClient.onopen = () => {
