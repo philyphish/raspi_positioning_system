@@ -4,9 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ws_1 = __importDefault(require("ws"));
-const webSocketModule = require("./socket");
+const WSClient = new ws_1.default('ws://localhost:3300');
 const Gpio = require("pigpio").Gpio;
-const WSClient = new ws_1.default("ws://localhost:3300");
 module.exports = {
     startHcsr0: () => {
         // The number of microseconds it takes sound to travel 1cm at 20 degrees celcius
@@ -16,19 +15,19 @@ module.exports = {
         trigger.digitalWrite(0); // Make sure trigger is low
         const watchHCSR04 = () => {
             let startTick;
-            echo.on("alert", (level, tick) => {
-                if (level == 1) {
-                    startTick = tick;
-                }
-                else {
-                    const endTick = tick;
-                    const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
-                    console.log(`Messurment: ${diff / 2 / MICROSECDONDS_PER_CM}`);
-                    WSClient.onopen = () => {
+            WSClient.onopen = () => {
+                echo.on("alert", (level, tick) => {
+                    if (level == 1) {
+                        startTick = tick;
+                    }
+                    else {
+                        const endTick = tick;
+                        const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
+                        console.log(diff / 2 / MICROSECDONDS_PER_CM);
                         WSClient.send(diff / 2 / MICROSECDONDS_PER_CM);
-                    };
-                }
-            });
+                    }
+                });
+            };
         };
         watchHCSR04();
         // Trigger a distance measurement once per second

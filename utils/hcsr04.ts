@@ -1,10 +1,7 @@
-import express from "express";
-import { Router } from "express";
 import WebSocket from "ws";
 
-const webSocketModule = require("./socket");
+const WSClient = new WebSocket('ws://localhost:3300');
 const Gpio = require("pigpio").Gpio;
-const WSClient = new WebSocket("ws://localhost:3300");
 
 module.exports = {
   startHcsr0: () => {
@@ -18,19 +15,18 @@ module.exports = {
 
     const watchHCSR04 = () => {
       let startTick: number;
-
-      echo.on("alert", (level: number, tick: number) => {
-        if (level == 1) {
-          startTick = tick;
-        } else {
-          const endTick = tick;
-          const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
-          console.log(`Messurment: ${diff / 2 / MICROSECDONDS_PER_CM}`);
-          WSClient.onopen = ()=> {
+      WSClient.onopen = ()=>{
+        echo.on("alert", (level: number, tick: number) => {
+          if (level == 1) {
+            startTick = tick;
+          } else {
+            const endTick = tick;
+            const diff = (endTick >> 0) - (startTick >> 0); // Unsigned 32 bit arithmetic
+            console.log(diff / 2 / MICROSECDONDS_PER_CM);
             WSClient.send(diff / 2 / MICROSECDONDS_PER_CM);
           }
-        }
-      });
+        });
+      }
     };
 
     watchHCSR04();
