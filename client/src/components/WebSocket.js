@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const clientWS = new WebSocket(`ws://localhost:3300`, ["ws"]);
+const clientWS = new WebSocket(`ws://192.168.0.25:3300`, ["ws"]);
 
 function WebSocketObj() {
   const [getMsg, setMsg] = useState("");
