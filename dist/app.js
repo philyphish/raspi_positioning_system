@@ -12,11 +12,11 @@ const port = 4200;
 const publicPath = express_1.default.static(path_1.default.join(__dirname, "../client/build"), {
     redirect: false,
 });
-// const HRCS04 = require('./utils/hcsr04');
+const HRCS04 = require('./utils/hcsr04');
 app.use(publicPath);
 app.listen(port, () => {
     console.log(`Server Listening on port ${port}`);
     WebSocketServer.connectWS();
-    // HRCS04.startHcsr0();
+    HRCS04.startHcsr0();
 });
 //# sourceMappingURL=app.js.map
