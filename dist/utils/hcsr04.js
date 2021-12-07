@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ws_1 = __importDefault(require("ws"));
-const WSClient = new ws_1.default('ws://localhost:3300');
+const WSClient = new ws_1.default('ws://192.168.0.25:3300');
 const Gpio = require("pigpio").Gpio;
 module.exports = {
     startHcsr0: () => {

@@ -11,13 +11,24 @@ function WebSocketObj() {
 
     clientWS.onmessage = (msg) => {
       setMsg(msg.data);
+      colorConverter();
       console.log(`State: `, msg.data);
+    };
+
+    const colorConverter = ()=> {
+      let colorNumber = getMsg;
+      console.log(`colorNumber: ${colorNumber}`);
+    }
+
+    const style = {
+      backgroundColor: 'green'
     };
   
   return (
     <div>
       <h2>WebSocket connected:</h2>
-      <p>{getMsg}</p>
+      <p>{getMsg}CM</p>
+      <div style={style}>this is some text</div>
     </div>
   );
 }
