@@ -22,7 +22,7 @@ export class StartWebSocketServer {
       ws.on('message', (msg: string) => {
         console.log(`Message Recieved ${msg}`);
         this.wss.clients.forEach(client => {
-          client.send(msg);
+          client.send(`${msg}`);
         });
       });
     });

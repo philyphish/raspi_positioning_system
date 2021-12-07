@@ -17,7 +17,7 @@ class StartWebSocketServer {
             ws.on('message', (msg) => {
                 console.log(`Message Recieved ${msg}`);
                 this.wss.clients.forEach(client => {
-                    client.send(msg);
+                    client.send(`${msg}`);
                 });
             });
         });
